@@ -30,3 +30,22 @@ def fetch_vacancies_hh(language):
             break
 
     return {'vacancies': vacancies, 'found': found}
+
+
+def fetch_vacancies_sj(language, token):
+    headers = {'X-Api-App-Id': token}
+
+    params = {
+        'period': 0,
+        'town': 4,
+        'catalogues': 48,
+    }
+
+    response = requests.get('https://api.superjob.ru/2.0/vacancies',
+                            params=params, headers=headers)
+    response.raise_for_status()
+
+    return {
+        'vacancies': response.json()['objects'],
+        'found': response.json()['total'],
+    }
