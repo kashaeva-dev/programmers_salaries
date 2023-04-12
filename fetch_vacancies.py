@@ -3,7 +3,7 @@ from itertools import count
 import requests
 
 
-def fetch_vacancies_hh(page, language):
+def fetch_vacancies_hh(language):
     request_url = "https://api.hh.ru/vacancies"
 
     page = 0
@@ -29,4 +29,4 @@ def fetch_vacancies_hh(page, language):
             found = page_payload['found']
             break
 
-    return [vacancies, found]
+    return {'vacancies': vacancies, 'found': found}
