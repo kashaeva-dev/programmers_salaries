@@ -1,17 +1,31 @@
+import os
 from statistics import mean
 
-from fetch_vacancies import fetch_vacancies_hh
-from predict_salary import predict_salary_hh
+from dotenv import load_dotenv, find_dotenv
+from terminaltables import AsciiTable
+
+from fetch_vacancies import fetch_vacancies_hh, fetch_vacancies_sj
+from predict_salary import predict_salary_hh, predict_salary_sj
 
 
-def get_salaries_by_languages(languages):
+def get_salaries_by_languages(languages, service):
+    job_search_services = {
+        'hh': {
+            'fetch': fetch_vacancies_hh,
+            'predict': predict_salary_hh,
+        },
+        'sj': {
+            'fetch': fetch_vacancies_sj,
+            'predict': predict_salary_sj,
+        },
+    }
     salaries_by_language = []
 
     for language in languages:
-        vacancies = fetch_vacancies_hh(language)
+        vacancies = job_search_services[service]['fetch'](language)
         salaries = []
         for vacancy in vacancies['vacancies']:
-            salary = predict_salary_hh(vacancy)
+            salary = job_search_services[service]['predict'](vacancy)
             if salary:
                 salaries.append(salary)
         salaries_by_language.append([
