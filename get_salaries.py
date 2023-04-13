@@ -36,7 +36,7 @@ def get_salaries_by_languages(languages, service, token=None):
                 language,
                 vacancies['found'],
                 len(salaries),
-                int(mean(salaries))
+                int(mean(salaries)),
             ])
         else:
             salaries_by_language.append([
@@ -73,8 +73,9 @@ def main():
     except KeyError:
         print('Не получается найти переменную окружения SUPERJOB_KEY')
     else:
-        salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
         salary_table_output(get_salaries_by_languages(languages, 'sj', token), 'SuperJob Moscow')
+        salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
+
 
 if __name__ == "__main__":
     main()
