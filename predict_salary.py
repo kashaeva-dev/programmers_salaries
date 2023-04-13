@@ -11,7 +11,7 @@ def predict_salary(salary_from, salary_to):
 
 def predict_salary_hh(vacancy):
     salary = vacancy['salary']
-    if salary['currency'] == 'RUR':
+    if salary and salary['currency'] == 'RUR':
         salary_from = vacancy['salary']['from']
         salary_to = vacancy['salary']['to']
         return predict_salary(salary_from, salary_to)
