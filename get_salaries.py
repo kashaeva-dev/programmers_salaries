@@ -63,16 +63,18 @@ def salary_table_output(table_data, table_title):
 
 
 def main():
-    load_dotenv(find_dotenv())
-    token = os.environ['SUPERJOB_KEY']
-
     languages = [
         'JavaScript', 'Java', 'Python', 'Ruby', 'PHP',
         'C++', 'C', 'Go', 'Swift', 'TypeScript', '1C',
     ]
-
-    salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
-    salary_table_output(get_salaries_by_languages(languages, 'sj', token), 'SuperJob Moscow')
+    try:
+        load_dotenv(find_dotenv())
+        token = os.environ['SUPERJOB_KEY']
+    except KeyError:
+        print('Не получается найти переменную окружения SUPERJOB_KEY')
+    else:
+        salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
+        salary_table_output(get_salaries_by_languages(languages, 'sj', token), 'SuperJob Moscow')
 
 if __name__ == "__main__":
     main()
