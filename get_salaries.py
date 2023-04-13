@@ -22,7 +22,10 @@ def get_salaries_by_languages(languages, service, token=None):
     salaries_by_language = []
 
     for language in languages:
-        vacancies = job_search_services[service]['fetch'](language, token)
+        if token:
+            vacancies = job_search_services[service]['fetch'](language, token)
+        else:
+            vacancies = job_search_services[service]['fetch'](language)
         salaries = []
         for vacancy in vacancies['vacancies']:
             salary = job_search_services[service]['predict'](vacancy)
@@ -59,7 +62,7 @@ def salary_table_output(table_data, table_title):
     print()
 
 
-if __name__ == "__main__":
+def main():
     load_dotenv(find_dotenv())
     token = os.environ['SUPERJOB_KEY']
 
@@ -68,4 +71,8 @@ if __name__ == "__main__":
         'C++', 'C', 'Go', 'Swift', 'TypeScript', '1C',
     ]
 
+    salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
     salary_table_output(get_salaries_by_languages(languages, 'sj', token), 'SuperJob Moscow')
+
+if __name__ == "__main__":
+    main()
