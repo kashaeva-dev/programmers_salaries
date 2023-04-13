@@ -33,11 +33,13 @@ def fetch_vacancies_hh(language):
 
 
 def fetch_vacancies_sj(language, token):
-    headers = {'X-Api-App-Id': token}
+    headers = {
+        'X-Api-App-Id': token,
+    }
 
     params = {
-        'period': 0,
         'town': 4,
+        'keyword': language,
         'catalogues': 48,
     }
 
