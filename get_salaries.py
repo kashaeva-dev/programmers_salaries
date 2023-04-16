@@ -9,8 +9,6 @@ from predict_salary import predict_salary_hh, predict_salary_sj
 
 
 def get_salary_by_language_sj(languages, token):
-    salary_by_language = []
-
     for language in languages:
 
         vacancies = fetch_vacancies_sj(language, token)
@@ -20,25 +18,19 @@ def get_salary_by_language_sj(languages, token):
             if salary:
                 salaries.append(salary)
         if salaries:
-            salary_by_language.append([
-                language,
-                vacancies['found'],
-                len(salaries),
-                int(mean(salaries)),
-            ])
+            mean_salary = int(mean(salaries))
         else:
-            salary_by_language.append([
+            mean_salary = 'Неизвестно'
+
+        return [
                 language,
                 vacancies['found'],
                 len(salaries),
-                'Неизвестно',
-            ])
-
-    return salary_by_language
+                mean_salary,
+            ]
 
 
 def get_salary_by_language_hh(language):
-    salary_by_language = []
     vacancies = fetch_vacancies_hh(language)
     salaries = []
     for vacancy in vacancies['vacancies']:
@@ -46,21 +38,16 @@ def get_salary_by_language_hh(language):
         if salary:
             salaries.append(salary)
     if salaries:
-        salary_by_language.append([
-            language,
-            vacancies['found'],
-            len(salaries),
-            int(mean(salaries)),
-        ])
+        mean_salary = int(mean(salaries))
     else:
-        salary_by_language.append([
-            language,
-            vacancies['found'],
-            len(salaries),
-            'Неизвестно',
-        ])
+        mean_salary = 'Неизвестно'
 
-    return salary_by_language
+    return [
+        language,
+        vacancies['found'],
+        len(salaries),
+        mean_salary,
+    ]
 
 
 def salary_table_output(table_data, table_title):
@@ -90,8 +77,8 @@ def main():
         salaries_by_languages_sj = []
         salaries_by_languages_hh = []
         for language in languages:
-            salaries_by_languages_sj += get_salary_by_language_sj(language, token)
-            salaries_by_languages_hh += get_salary_by_language_hh(language)
+            salaries_by_languages_sj.append(get_salary_by_language_sj(language, token))
+            salaries_by_languages_hh.append(get_salary_by_language_hh(language))
         salary_table_output(salaries_by_languages_sj, 'SuperJob Moscow')
         salary_table_output(salaries_by_languages_hh, 'HeadHunter Moscow')
 
