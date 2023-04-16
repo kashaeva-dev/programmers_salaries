@@ -21,7 +21,10 @@ for Linux or macOS:
 ```
 source env/bin/activate
 ```
-4. Install the requirements: ```pip install -r requirements.txt```
+4. Install the requirements:
+```
+pip install -r requirements.txt
+```
 
 5. Set environment variables in a file named .env. Create it in the root directory of the project and add your telegram bot API token and chat ID as well as NASA API token as follows:
 ```
