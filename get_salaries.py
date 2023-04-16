@@ -1,66 +1,10 @@
 import os
-from statistics import mean
 
 from dotenv import load_dotenv, find_dotenv
-from terminaltables import AsciiTable
 
-from fetch_vacancies import fetch_vacancies_hh, fetch_vacancies_sj
-from predict_salary import predict_salary_hh, predict_salary_sj
-
-
-def get_salary_by_language_sj(languages, token):
-    for language in languages:
-
-        vacancies = fetch_vacancies_sj(language, token)
-        salaries = []
-        for vacancy in vacancies['vacancies']:
-            salary = predict_salary_sj(vacancy)
-            if salary:
-                salaries.append(salary)
-        if salaries:
-            mean_salary = int(mean(salaries))
-        else:
-            mean_salary = 'Неизвестно'
-
-        return [
-                language,
-                vacancies['found'],
-                len(salaries),
-                mean_salary,
-            ]
-
-
-def get_salary_by_language_hh(language):
-    vacancies = fetch_vacancies_hh(language)
-    salaries = []
-    for vacancy in vacancies['vacancies']:
-        salary = predict_salary_hh(vacancy)
-        if salary:
-            salaries.append(salary)
-    if salaries:
-        mean_salary = int(mean(salaries))
-    else:
-        mean_salary = 'Неизвестно'
-
-    return [
-        language,
-        vacancies['found'],
-        len(salaries),
-        mean_salary,
-    ]
-
-
-def display_salary_table(salaries, table_title):
-    headings = [[
-        'Язык программирования',
-        'Вакансий найдено',
-        'Вакансий обработано',
-        'Средняя зарплата',
-    ]]
-    salaries_with_headings = headings + salaries
-    table_instance = AsciiTable(salaries_with_headings, table_title)
-    print(table_instance.table)
-    print()
+from common import display_salary_table
+from headHunter import get_salary_by_language_hh
+from superJobs import get_salary_by_language_sj
 
 
 def main():
