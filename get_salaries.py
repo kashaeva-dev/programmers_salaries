@@ -50,15 +50,15 @@ def get_salary_by_language_hh(language):
     ]
 
 
-def salary_table_output(table_data, table_title):
+def display_salary_table(salaries, table_title):
     headings = [[
         'Язык программирования',
         'Вакансий найдено',
         'Вакансий обработано',
         'Средняя зарплата',
     ]]
-    table_data = headings + table_data
-    table_instance = AsciiTable(table_data, table_title)
+    salaries_with_headings = headings + salaries
+    table_instance = AsciiTable(salaries_with_headings, table_title)
     print(table_instance.table)
     print()
 
@@ -79,8 +79,8 @@ def main():
         for language in languages:
             salaries_by_languages_sj.append(get_salary_by_language_sj(language, token))
             salaries_by_languages_hh.append(get_salary_by_language_hh(language))
-        salary_table_output(salaries_by_languages_sj, 'SuperJob Moscow')
-        salary_table_output(salaries_by_languages_hh, 'HeadHunter Moscow')
+        display_salary_table(salaries_by_languages_sj, 'SuperJob Moscow')
+        display_salary_table(salaries_by_languages_hh, 'HeadHunter Moscow')
 
 
 if __name__ == "__main__":
