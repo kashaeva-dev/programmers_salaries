@@ -11,18 +11,16 @@ def predict_salary(salary_from, salary_to):
 
 def predict_salary_hh(vacancy):
     salary = vacancy['salary']
-    if salary and salary['currency'] == 'RUR':
-        salary_from = vacancy['salary']['from']
-        salary_to = vacancy['salary']['to']
-        return predict_salary(salary_from, salary_to)
-    else:
+    if not salary or salary['currency'] != 'RUR':
         return None
+    salary_from = vacancy['salary']['from']
+    salary_to = vacancy['salary']['to']
+    return predict_salary(salary_from, salary_to)
 
 
 def predict_salary_sj(vacancy):
-    if vacancy['currency'] == 'rub':
-        salary_from = vacancy['payment_from']
-        salary_to = vacancy['payment_to']
-        return predict_salary(salary_from, salary_to)
-    else:
+    if vacancy['currency'] != 'rub':
         return None
+    salary_from = vacancy['payment_from']
+    salary_to = vacancy['payment_to']
+    return predict_salary(salary_from, salary_to)
