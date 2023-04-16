@@ -4,14 +4,15 @@ import requests
 
 
 def fetch_vacancies_hh(language):
+    moscow = '1'
+    days = 30
+    page = 0
     request_url = "https://api.hh.ru/vacancies"
 
-    page = 0
-
     params = {
-        'area': '1',
+        'area': moscow,
         'text': f'программист {language}',
-        'period': 30,
+        'period': days,
         'page': page,
     }
 
@@ -33,14 +34,16 @@ def fetch_vacancies_hh(language):
 
 
 def fetch_vacancies_sj(language, token):
+    moscow = 4
+    programming = 48
     headers = {
         'X-Api-App-Id': token,
     }
 
     params = {
-        'town': 4,
+        'town': moscow,
         'keyword': language,
-        'catalogues': 48,
+        'catalogues': programming,
     }
 
     response = requests.get('https://api.superjob.ru/2.0/vacancies',
