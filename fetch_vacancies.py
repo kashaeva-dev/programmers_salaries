@@ -6,20 +6,19 @@ import requests
 def fetch_vacancies_hh(language):
     moscow = '1'
     days = 30
-    page = 0
     request_url = "https://api.hh.ru/vacancies"
 
     params = {
         'area': moscow,
         'text': f'программист {language}',
         'period': days,
-        'page': page,
     }
 
     vacancies = []
     found = 0
 
     for page in count():
+        params['page'] = page
         page_response = requests.get(request_url, params=params)
         page_response.raise_for_status()
         page_payload = page_response.json()
@@ -36,6 +35,8 @@ def fetch_vacancies_hh(language):
 def fetch_vacancies_sj(language, token):
     moscow = 4
     programming = 48
+    request_url = 'https://api.superjob.ru/2.0/vacancies'
+
     headers = {
         'X-Api-App-Id': token,
     }
@@ -44,13 +45,24 @@ def fetch_vacancies_sj(language, token):
         'town': moscow,
         'keyword': language,
         'catalogues': programming,
+        'count': 100,
     }
 
-    response = requests.get('https://api.superjob.ru/2.0/vacancies',
-                            params=params, headers=headers)
-    response.raise_for_status()
-    response_json = response.json()
-    return {
-        'vacancies': response_json['objects'],
-        'found': response_json['total'],
-    }
+    vacancies = []
+    found = 0
+
+    for page in count():
+
+        params['page'] = page
+
+        page_response = requests.get(request_url, params=params, headers=headers)
+        page_response.raise_for_status()
+        page_payload = page_response.json()
+
+        vacancies.extend(page_payload['objects'])
+
+        if not page_payload['more']:
+            found = page_payload['total']
+            break
+
+    return {'vacancies': vacancies, 'found': found}
