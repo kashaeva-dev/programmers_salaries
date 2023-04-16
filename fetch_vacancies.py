@@ -49,8 +49,8 @@ def fetch_vacancies_sj(language, token):
     response = requests.get('https://api.superjob.ru/2.0/vacancies',
                             params=params, headers=headers)
     response.raise_for_status()
-
+    response_json = response.json()
     return {
-        'vacancies': response.json()['objects'],
-        'found': response.json()['total'],
+        'vacancies': response_json['objects'],
+        'found': response_json['total'],
     }
