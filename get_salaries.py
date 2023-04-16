@@ -8,45 +8,59 @@ from fetch_vacancies import fetch_vacancies_hh, fetch_vacancies_sj
 from predict_salary import predict_salary_hh, predict_salary_sj
 
 
-def get_salaries_by_languages(languages, service, token=None):
-    job_search_services = {
-        'hh': {
-            'fetch': fetch_vacancies_hh,
-            'predict': predict_salary_hh,
-        },
-        'sj': {
-            'fetch': fetch_vacancies_sj,
-            'predict': predict_salary_sj,
-        },
-    }
-    salaries_by_language = []
+def get_salary_by_language_sj(languages, token):
+    salary_by_language = []
 
     for language in languages:
-        if token:
-            vacancies = job_search_services[service]['fetch'](language, token)
-        else:
-            vacancies = job_search_services[service]['fetch'](language)
+
+        vacancies = fetch_vacancies_sj(language, token)
         salaries = []
         for vacancy in vacancies['vacancies']:
-            salary = job_search_services[service]['predict'](vacancy)
+            salary = predict_salary_sj(vacancy)
             if salary:
                 salaries.append(salary)
         if salaries:
-            salaries_by_language.append([
+            salary_by_language.append([
                 language,
                 vacancies['found'],
                 len(salaries),
                 int(mean(salaries)),
             ])
         else:
-            salaries_by_language.append([
+            salary_by_language.append([
                 language,
                 vacancies['found'],
                 len(salaries),
                 'Неизвестно',
             ])
 
-    return salaries_by_language
+    return salary_by_language
+
+
+def get_salary_by_language_hh(language):
+    salary_by_language = []
+    vacancies = fetch_vacancies_hh(language)
+    salaries = []
+    for vacancy in vacancies['vacancies']:
+        salary = predict_salary_hh(vacancy)
+        if salary:
+            salaries.append(salary)
+    if salaries:
+        salary_by_language.append([
+            language,
+            vacancies['found'],
+            len(salaries),
+            int(mean(salaries)),
+        ])
+    else:
+        salary_by_language.append([
+            language,
+            vacancies['found'],
+            len(salaries),
+            'Неизвестно',
+        ])
+
+    return salary_by_language
 
 
 def salary_table_output(table_data, table_title):
@@ -73,8 +87,13 @@ def main():
     except KeyError:
         print('Не получается найти переменную окружения SUPERJOB_KEY')
     else:
-        salary_table_output(get_salaries_by_languages(languages, 'sj', token), 'SuperJob Moscow')
-        salary_table_output(get_salaries_by_languages(languages, 'hh'), 'HeadHunter Moscow')
+        salaries_by_languages_sj = []
+        salaries_by_languages_hh = []
+        for language in languages:
+            salaries_by_languages_sj += get_salary_by_language_sj(language, token)
+            salaries_by_languages_hh += get_salary_by_language_hh(language)
+        salary_table_output(salaries_by_languages_sj, 'SuperJob Moscow')
+        salary_table_output(salaries_by_languages_hh, 'HeadHunter Moscow')
 
 
 if __name__ == "__main__":
